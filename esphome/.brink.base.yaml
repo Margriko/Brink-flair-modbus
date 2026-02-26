@@ -494,6 +494,38 @@ select:
       "Device LCD": 0      
       "Modbus Step": 1
       "Modbus Flow": 2
+    on_value:
+      then:
+        - if:
+            condition:
+              lambda: 'return x == "Modbus Step";'
+            then:
+              - fan.template.publish:
+                  id: brink_ventilation_step_fan
+                  state: !lambda 'return !id(brink_standby_switch).state;'
+              - fan.template.publish:
+                  id: brink_ventilation_flow_fan
+                  state: false
+        - if:
+            condition:
+              lambda: 'return x == "Modbus Flow";'
+            then:
+              - fan.template.publish:
+                  id: brink_ventilation_flow_fan
+                  state: !lambda 'return !id(brink_standby_switch).state;'
+              - fan.template.publish:
+                  id: brink_ventilation_step_fan
+                  state: false
+        - if:
+            condition:
+              lambda: 'return x == "Device LCD";'
+            then:
+              - fan.template.publish:
+                  id: brink_ventilation_step_fan
+                  state: false
+              - fan.template.publish:
+                  id: brink_ventilation_flow_fan
+                  state: false
 #    on_value:
 #        then:
 #          - lambda: |-
@@ -622,7 +654,13 @@ switch:
             auto set_value_cmd = esphome::modbus_controller::ModbusCommandItem::create_write_single_command(
               controller, 8003, 1);
             delay(20) ;
-            controller->queue_command(set_value_cmd);    
+            controller->queue_command(set_value_cmd);
+        - fan.template.publish:
+            id: brink_ventilation_step_fan
+            state: false
+        - fan.template.publish:
+            id: brink_ventilation_flow_fan
+            state: false
     on_turn_off:
       then:
         - lambda: |-
@@ -631,6 +669,86 @@ switch:
               controller, 8003, 2);
             delay(20) ;
             controller->queue_command(set_value_cmd);
+        - if:
+            condition:
+              lambda: 'return id(brink_modbus_control_mode).state == "Modbus Step";'
+            then:
+              - fan.template.publish:
+                  id: brink_ventilation_step_fan
+                  state: true
+              - fan.template.publish:
+                  id: brink_ventilation_flow_fan
+                  state: false
+        - if:
+            condition:
+              lambda: 'return id(brink_modbus_control_mode).state == "Modbus Flow";'
+            then:
+              - fan.template.publish:
+                  id: brink_ventilation_flow_fan
+                  state: true
+              - fan.template.publish:
+                  id: brink_ventilation_step_fan
+                  state: false
+        - if:
+            condition:
+              lambda: 'return id(brink_modbus_control_mode).state == "Device LCD";'
+            then:
+              - fan.template.publish:
+                  id: brink_ventilation_step_fan
+                  state: false
+              - fan.template.publish:
+                  id: brink_ventilation_flow_fan
+                  state: false
+
+fan:
+  - id: brink_ventilation_step_fan
+    name: ${brink_modbus_flow_step}
+    platform: template
+    icon: mdi:fan
+    speed_count: 4
+    restore_mode: RESTORE_DEFAULT_ON
+    on_speed_set:
+      then:
+        - select.set:
+            id: brink_modbus_control_mode
+            option: Modbus Step
+        - number.set:
+            id: brink_modbus_flow_step
+            value: !lambda return x;
+    on_turn_on:
+      then:
+        - switch.turn_off: brink_standby_switch
+        - select.set:
+            id: brink_modbus_control_mode
+            option: Modbus Step
+    on_turn_off:
+      then:
+        - switch.turn_on: brink_standby_switch
+
+
+  - id: brink_ventilation_flow_fan
+    name: ${brink_modbus_flow_rate}
+    platform: template
+    icon: mdi:fan
+    speed_count: 100
+    restore_mode: RESTORE_DEFAULT_ON
+    on_speed_set:
+      then:
+        - select.set:
+            id: brink_modbus_control_mode
+            option: Modbus Flow
+        - number.set:
+            id: brink_modbus_flow_rate
+            value: !lambda return roundf((x / 100.0f) * ${type_modbus_flow_rate_max});
+    on_turn_on:
+      then:
+        - switch.turn_off: brink_standby_switch
+        - select.set:
+            id: brink_modbus_control_mode
+            option: Modbus Flow
+    on_turn_off:
+      then:
+        - switch.turn_on: brink_standby_switch
 
 button:
   - id: brink_reset_filter_button
@@ -669,6 +787,78 @@ button:
 #            ESP_LOGI("ModbusLambda", "Brink Modbus Step set");
 
 number:
+  - id: brink_modbus_flow_rate
+    name: ${brink_modbus_flow_rate}
+    platform: modbus_controller
+    modbus_controller_id: ${name}
+    register_type: holding
+    address: 8002
+    value_type: S_WORD
+    min_value: 0
+    max_value: ${type_modbus_flow_rate_max}
+    internal: true
+    on_value:
+      then:
+        - fan.template.publish:
+            id: brink_ventilation_flow_fan
+            speed: !lambda 'return roundf((x / ${type_modbus_flow_rate_max}) * 100.0f);'
+
+  - id: brink_flow_0
+    name: Flow 0
+    platform: modbus_controller
+    modbus_controller_id: ${name}
+    register_type: holding
+    address: 6000
+    entity_category: config
+    unit_of_measurement: "m3/h"
+    value_type: S_WORD
+    min_value: 0
+    max_value: ${type_flow_max}
+    mode: slider
+    icon: mdi:fan-auto
+
+  - id: brink_flow_1
+    name: Flow 1
+    platform: modbus_controller
+    modbus_controller_id: ${name}
+    register_type: holding
+    address: 6001
+    entity_category: config
+    unit_of_measurement: "m3/h"
+    value_type: S_WORD
+    min_value: 50
+    max_value: ${type_flow_max}
+    mode: slider
+    icon: mdi:fan-speed-1
+
+  - id: brink_flow_2
+    name: Flow 2
+    platform: modbus_controller
+    modbus_controller_id: ${name}
+    register_type: holding
+    address: 6002
+    entity_category: config
+    unit_of_measurement: "m3/h"
+    value_type: S_WORD
+    min_value: 50
+    max_value: ${type_flow_max}
+    mode: slider
+    icon: mdi:fan-speed-2
+
+  - id: brink_flow_3
+    name: Flow 3
+    platform: modbus_controller
+    modbus_controller_id: ${name}
+    register_type: holding
+    address: 6003
+    entity_category: config
+    unit_of_measurement: "m3/h"
+    value_type: S_WORD
+    min_value: 50
+    max_value: ${type_flow_max}
+    mode: slider
+    icon: mdi:fan-speed-3
+
   # If the bypass boost function is activated, the bypass opens and the fan will run at this preset setting.
   - id: brink_bypass_boost_switch_position
     name: ${brink_bypass_boost_switch_position}
@@ -691,9 +881,15 @@ number:
     value_type: S_WORD      
     min_value: 0
     max_value: 3
-    mode: slider
+    internal: true
     icon: mdi:fan
- 
+    on_value:
+      then:
+        - fan.template.publish:
+            id: brink_ventilation_step_fan
+            speed: !lambda 'return x;'
+
+
   - id: brink_imbalance_intake
     name: ${brink_imbalance_intake}
     platform: modbus_controller
