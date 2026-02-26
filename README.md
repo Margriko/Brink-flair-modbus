@@ -6,7 +6,7 @@ Currently supported ESP32 and ESP8266 platforms.
 By default ESP32S3 is used. If you want to use ESP8266, edit file `esphome/brink.yaml`, comment out esp32 include and uncomment esp8266 include file.
 
 ```
-# Choose the correct type for your Brink model, so the correct max flow can be setup with a slider.
+# Set your Brink model limits with substitutions below so max flow is configured correctly.
 # In order to use other language or a different ESP chip, fix file names below.
 # Currently supported languages are en, nl. 
 # ESP32 is a mh-et-live or wemos d32 mini, esp8266 is a wemos d1 mini, esp32s3 is a lilygo ESP32S3-T7
@@ -17,8 +17,7 @@ packages:
     url: https://github.com/fonske/Brink-flair-modbus
     ref: main
     refresh: 0s
-    files: [ esphome/type/brink-325.yaml,
-             esphome/labels/.brink-labels-en.yaml, 
+    files: [ esphome/labels/.brink-labels-en.yaml, 
              esphome/.brink.base.yaml, 
              esphome/boards/board-esp32S3.yaml,
              esphome/sensors/sensor-enviii-i2c-m5stack.yaml,
@@ -26,11 +25,6 @@ packages:
              esphome/sensors/sensor-brink_co2_1_sensor.yaml
            ]
     ## options are:
-      # esphome/type/brink-300.yaml
-      # esphome/type/brink-325.yaml
-      # esphome/type/brink-400.yaml
-      # esphome/type/brink-450.yaml
-      # esphome/type/brink-600.yaml
       # esphome/labels/.brink-labels-en.yaml
       # esphome/labels/.brink-labels-nl.yaml
       # esphome/.brink.base.yaml
@@ -56,9 +50,18 @@ packages:
 #  substitutions: !include labels/.brink-labels-nl.yaml
 #  device_base1: !include .brink.base.yaml
 #  device_base2: !include boards/board-m5stack-atoms3-lite.yaml
-#  device_base3: !include type/brink-325.yaml
-#  device_base4: !include sensors/sensor-scd41-i2c-m5stack.yaml
+#  device_base3: !include sensors/sensor-scd41-i2c-m5stack.yaml
 ```
+
+Model substitution values:
+- 200: `type_flow_max: "200"`, `type_modbus_flow_rate_max: "200"`
+- 225: `type_flow_max: "225"`, `type_modbus_flow_rate_max: "225"`
+- 300: `type_flow_max: "300"`, `type_modbus_flow_rate_max: "280"`
+- 325: `type_flow_max: "325"`, `type_modbus_flow_rate_max: "280"`
+- 400: `type_flow_max: "400"`, `type_modbus_flow_rate_max: "400"`
+- 450: `type_flow_max: "450"`, `type_modbus_flow_rate_max: "450"`
+- 600: `type_flow_max: "600"`, `type_modbus_flow_rate_max: "600"`
+
 
 # Translations
 Currently supported languages are en, nl.

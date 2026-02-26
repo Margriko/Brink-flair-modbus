@@ -151,89 +151,16 @@
             state_color: false
             name: power
             icon: mdi:power-socket-eu
-          - type: horizontal-stack
-            cards:
-              - type: custom:button-card
-                styles:
-                  card:
-                    - height: 150px
-                icon: mdi:fan-auto
-                size: 75%
-                show_state: true
-                state:
-                  - operator: template
-                    value: |
-                      [[[
-                        return states['number.brink_modbus_preset_switch'].state == "0.0"
-                      ]]]
-                    color: darkcyan
-                tap_action:
-                  action: call-service
-                  service: number.set_value
-                  service_data:
-                    value: 0
-                    entity_id: number.brink_modbus_preset_switch
-              - type: custom:button-card
-                styles:
-                  card:
-                    - height: 150px
-                icon: mdi:fan-speed-1
-                size: 75%
-                show_state: true
-                state:
-                  - operator: template
-                    value: |
-                      [[[
-                        return states['number.brink_modbus_preset_switch'].state == 1.0
-                      ]]]
-                    color: darkcyan
-                  - operator: default
-                tap_action:
-                  action: call-service
-                  service: number.set_value
-                  service_data:
-                    value: 1
-                    entity_id: number.brink_modbus_preset_switch
-              - type: custom:button-card
-                styles:
-                  card:
-                    - height: 150px
-                icon: mdi:fan-speed-2
-                size: 75%
-                show_state: true
-                state:
-                  - operator: template
-                    value: |
-                      [[[
-                        return states['number.brink_modbus_preset_switch'].state == "2.0"
-                      ]]]
-                    color: darkcyan
-                tap_action:
-                  action: call-service
-                  service: number.set_value
-                  service_data:
-                    value: 2
-                    entity_id: number.brink_modbus_preset_switch
-              - type: custom:button-card
-                styles:
-                  card:
-                    - height: 150px
-                icon: mdi:fan-speed-3
-                size: 75%
-                show_state: true
-                state:
-                  - operator: template
-                    value: |
-                      [[[
-                        return states['number.brink_modbus_preset_switch'].state == "3.0"
-                      ]]]
-                    color: darkcyan
-                tap_action:
-                  action: call-service
-                  service: number.set_value
-                  service_data:
-                    value: 3
-                    entity_id: number.brink_modbus_preset_switch
+          - type: tile
+            entity: fan.brink_modbus_preset_switch
+            name: Brink ventilation
+            features_position: bottom
+            vertical: false
+          - type: tile
+            entity: fan.brink_modbus_flow_rate
+            name: Brink flow
+            features_position: bottom
+            vertical: false
           - type: entities
             entities:
               - entity: select.brink_bypass_mode
@@ -272,9 +199,9 @@
             name: Flow 2
           - entity: number.brink_flow_3
             name: Flow 3
-          - entity: number.brink_modbus_preset_switch
+          - entity: fan.brink_modbus_preset_switch
             name: Modbus preset switch
-          - entity: number.brink_modbus_flow_rate
+          - entity: fan.brink_modbus_flow_rate
             name: Modbus flow rate
           - entity: number.brink_brink_imbalance_intake
             name: Imbalance intake
