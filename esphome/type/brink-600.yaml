@@ -17,6 +17,7 @@ number:
     modbus_controller_id: ${name}
     register_type: holding
     address: 6000
+    entity_category: config
     unit_of_measurement: "m3/h"
     value_type: S_WORD      
     min_value: 0
@@ -30,6 +31,7 @@ number:
     modbus_controller_id: ${name}
     register_type: holding
     address: 6001
+    entity_category: config
     unit_of_measurement: "m3/h"
     value_type: S_WORD      
     min_value: 50
@@ -43,6 +45,7 @@ number:
     modbus_controller_id: ${name}
     register_type: holding
     address: 6002
+    entity_category: config
     unit_of_measurement: "m3/h"
     value_type: S_WORD      
     min_value: 50
@@ -56,6 +59,7 @@ number:
     modbus_controller_id: ${name}
     register_type: holding
     address: 6003
+    entity_category: config
     unit_of_measurement: "m3/h"
     value_type: S_WORD   
     min_value: 50
