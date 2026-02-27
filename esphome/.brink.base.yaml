@@ -525,7 +525,7 @@ select:
 #    on_value:
 #        then:
 #          - lambda: |-
-#              std::string current_mode_str = id(brink_modbus_control_mode).state;
+#              std::string current_mode_str = id(brink_modbus_control_mode).current_option();
 #              std::string requested_mode_str = x;  // 'x' is the requested mode value
 #
 #              // Convert strings to integers using the options map
@@ -581,7 +581,7 @@ select:
                 return;
               }
 
-              std::string current_mode_str = id(brink_bypass_mode).state;
+              std::string current_mode_str = id(brink_bypass_mode).current_option();
               std::string requested_mode_str = x;  // 'x' is the requested mode value
 
               // Convert strings to integers using the options map
@@ -607,7 +607,6 @@ select:
                 ESP_LOGI("bypass", "Bypass mode already set, no switching needed.");
                 return;  // Prevent switching if the mode is already active
               }
-
 
               ESP_LOGI("bypass", "Switching bypass mode to: %d", requested_mode);
               esphome::modbus_controller::ModbusController *controller = id(${name});
@@ -663,19 +662,19 @@ switch:
             controller->queue_command(set_value_cmd);
         - if:
             condition:
-              lambda: 'return id(brink_modbus_control_mode).state == "Modbus Step";'
+              lambda: 'return id(brink_modbus_control_mode).current_option() == "Modbus Step";'
             then:
               - fan.turn_on: brink_ventilation_step_fan
               - fan.turn_off: brink_ventilation_flow_fan
         - if:
             condition:
-              lambda: 'return id(brink_modbus_control_mode).state == "Modbus Flow";'
+              lambda: 'return id(brink_modbus_control_mode).current_option() == "Modbus Flow";'
             then:
               - fan.turn_on: brink_ventilation_flow_fan
               - fan.turn_off: brink_ventilation_step_fan
         - if:
             condition:
-              lambda: 'return id(brink_modbus_control_mode).state == "Device LCD";'
+              lambda: 'return id(brink_modbus_control_mode).current_option() == "Device LCD";'
             then:
               - fan.turn_off: brink_ventilation_step_fan
               - fan.turn_off: brink_ventilation_flow_fan
@@ -690,7 +689,7 @@ output:
     write_lambda: |-
       // Brink register 8001 is a step selector only:
       // 0..3 maps to fan steps 1..4 (off is controlled via standby register 8003).
-      auto step = static_cast<int>(roundf(state * 4.0f)) - 1;
+      auto step = static_cast<int>(roundf(x * 4.0f)) - 1;
       if (step < 0) {
         return 0;
       }
@@ -706,7 +705,7 @@ output:
     address: 8002
     value_type: S_WORD
     write_lambda: |-
-      return static_cast<int>(roundf(state * ${type_modbus_flow_rate_max}));
+      return static_cast<int>(roundf(x * ${type_modbus_flow_rate_max}));
 
 fan:
   - id: brink_ventilation_step_fan
