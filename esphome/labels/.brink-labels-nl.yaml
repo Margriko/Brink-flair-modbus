@@ -35,6 +35,7 @@ substitutions:
   brink_bypass_boost_switch_position: Bypass Boost fan stand
   brink_modbus_flow_step: Ventilatie stand
   brink_modbus_flow_rate: Modbus flow waarde
+  brink_modbus_combined_fan: Modbus gecombineerde fan
   brink_status: Status
   brink_rht_sensor: Vocht sensor
   brink_co2_sensor: CO2 sensor

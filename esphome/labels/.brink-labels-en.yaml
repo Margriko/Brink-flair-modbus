@@ -35,6 +35,7 @@ substitutions:
   brink_bypass_boost_switch_position: Bypass Boost switch position
   brink_modbus_flow_step: Modbus preset switch
   brink_modbus_flow_rate: Modbus flow rate
+  brink_modbus_combined_fan: Modbus combined fan
   brink_status: Status
   brink_rht_sensor: RHT sensor active
   brink_co2_sensor: CO2 sensor active

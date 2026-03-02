@@ -161,6 +161,11 @@
             name: Brink flow
             features_position: bottom
             vertical: false
+          - type: tile
+            entity: fan.brink_modbus_combined_fan
+            name: Brink combined fan
+            features_position: bottom
+            vertical: false
           - type: entities
             entities:
               - entity: select.brink_bypass_mode
@@ -203,6 +208,8 @@
             name: Modbus preset switch
           - entity: fan.brink_modbus_flow_rate
             name: Modbus flow rate
+          - entity: fan.brink_modbus_combined_fan
+            name: Modbus combined fan
           - entity: number.brink_brink_imbalance_intake
             name: Imbalance intake
           - entity: number.brink_fan_imbalance_exhaust

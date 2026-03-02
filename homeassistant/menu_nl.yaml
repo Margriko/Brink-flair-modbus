@@ -149,6 +149,11 @@
             name: Brink flow
             features_position: bottom
             vertical: false
+          - type: tile
+            entity: fan.brink_modbus_gecombineerde_fan
+            name: Brink gecombineerde fan
+            features_position: bottom
+            vertical: false
           - type: entities
             entities:
               - entity: select.brink_bypass_mode
@@ -189,6 +194,8 @@
             name: Ventilatie stand
           - entity: fan.brink_modbus_flow_waarde
             name: Ventilatie flow waarde
+          - entity: fan.brink_modbus_gecombineerde_fan
+            name: Modbus gecombineerde fan
           - entity: number.brink_fan_onbalans_inlaat
             name: Fan onbalans inlaat
           - entity: number.brink_fan_onbalans_uitlaat
