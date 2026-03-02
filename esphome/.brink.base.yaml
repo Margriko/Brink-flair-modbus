@@ -558,9 +558,8 @@ switch:
     modbus_controller_id: ${name}
     register_type: holding
     address: 8003
-    value_type: U_WORD
     write_lambda: "return x > 0.5 ? 2 : 1;"
-    invert: true
+    inverted: true
 
   - id: brink_bypass_boost
     name: Bypass Boost
