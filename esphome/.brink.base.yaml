@@ -560,6 +560,7 @@ switch:
     address: 8003
     write_lambda: "return x ? 2 : 1;"
     inverted: true
+    optimistic: true
 
   - id: brink_bypass_boost
     name: Bypass Boost
