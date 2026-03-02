@@ -687,7 +687,7 @@ fan:
     speed_count: 100
     restore_mode: RESTORE_DEFAULT_ON
     preset_modes:
-      - off
+      - "off"
       - None
       - Low
       - medium
