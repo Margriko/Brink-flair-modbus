@@ -552,16 +552,6 @@ select:
               controller->queue_command(set_value_cmd); 
 
 switch:
-  - id: brink_active_switch
-    name: Active
-    platform: modbus_controller
-    modbus_controller_id: ${name}
-    register_type: holding
-    address: 8003
-    write_lambda: "return x ? 2 : 1;"
-    inverted: true
-    assumed_state: true
-
   - id: brink_bypass_boost
     name: Bypass Boost
     platform: modbus_controller
