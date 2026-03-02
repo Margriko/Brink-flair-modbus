@@ -687,12 +687,10 @@ fan:
     speed_count: 100
     restore_mode: RESTORE_DEFAULT_ON
     preset_modes:
-      - "off"
-      - None
-      - Low
-      - medium
-      - High
-      - Turbo
+      - sleep
+      - comfort
+      - breeze
+      - boost
     on_turn_on:
       then:
         - switch.turn_off: brink_standby_switch
@@ -708,14 +706,7 @@ fan:
       then:
         - if:
             condition:
-              lambda: 'return x == "None";'
-            then:
-              - select.set:
-                  id: brink_modbus_control_mode
-                  option: Modbus Flow
-        - if:
-            condition:
-              lambda: 'return x == "Low";'
+              lambda: 'return x == "sleep";'
             then:
               - number.set:
                   id: brink_modbus_flow_step
@@ -728,7 +719,7 @@ fan:
                   option: Modbus Step
         - if:
             condition:
-              lambda: 'return x == "medium";'
+              lambda: 'return x == "comfort";'
             then:
               - number.set:
                   id: brink_modbus_flow_step
@@ -741,7 +732,7 @@ fan:
                   option: Modbus Step
         - if:
             condition:
-              lambda: 'return x == "High";'
+              lambda: 'return x == "breeze";'
             then:
               - number.set:
                   id: brink_modbus_flow_step
@@ -754,7 +745,7 @@ fan:
                   option: Modbus Step
         - if:
             condition:
-              lambda: 'return x == "Turbo";'
+              lambda: 'return x == "boost";'
             then:
               - number.set:
                   id: brink_modbus_flow_step
