@@ -622,26 +622,6 @@ output:
     write_lambda: |-
       return static_cast<int>(roundf(x * ${type_modbus_flow_rate_max}));
 
-  - id: brink_modbus_combined_output
-    platform: template
-    type: float
-    write_action:
-      - switch.turn_off: brink_standby_switch
-      - if:
-          condition:
-            lambda: 'return id(brink_modbus_control_mode).current_option() == "Modbus Step";'
-          then:
-            - output.set_level:
-                id: brink_modbus_flow_step_output
-                level: !lambda 'return (id(brink_modbus_flow_step).state + 1.0f) / 4.0f;'
-          else:
-            - select.set:
-                id: brink_modbus_control_mode
-                option: Modbus Flow
-            - output.set_level:
-                id: brink_modbus_flow_rate_output
-                level: !lambda 'return state;'
-
 fan:
   - id: brink_ventilation_step_fan
     name: ${brink_modbus_flow_step}
@@ -656,6 +636,11 @@ fan:
     on_turn_off:
       then:
         - switch.turn_on: brink_standby_switch
+    on_speed_set:
+      then:
+        - select.set:
+            id: brink_modbus_control_mode
+            option: Modbus Step
 
   - id: brink_ventilation_flow_fan
     name: ${brink_modbus_flow_rate}
@@ -670,84 +655,11 @@ fan:
     on_turn_off:
       then:
         - switch.turn_on: brink_standby_switch
-
-  - id: brink_ventilation_combined_fan
-    name: ${brink_modbus_combined_fan}
-    platform: speed
-    output: brink_modbus_combined_output
-    icon: mdi:fan-auto
-    speed_count: 100
-    restore_mode: RESTORE_DEFAULT_ON
-    preset_modes:
-      - sleep
-      - comfort
-      - breeze
-      - boost
-    on_turn_on:
-      then:
-        - switch.turn_off: brink_standby_switch
-    on_turn_off:
-      then:
-        - switch.turn_on: brink_standby_switch
     on_speed_set:
       then:
         - select.set:
             id: brink_modbus_control_mode
             option: Modbus Flow
-    on_preset_set:
-      then:
-        - if:
-            condition:
-              lambda: 'return x == "sleep";'
-            then:
-              - number.set:
-                  id: brink_modbus_flow_step
-                  value: 0
-              - fan.turn_on:
-                  id: brink_ventilation_combined_fan
-                  speed: !lambda 'return (int) roundf((id(brink_flow_0).state / ${type_flow_max}) * 100.0f);'
-              - select.set:
-                  id: brink_modbus_control_mode
-                  option: Modbus Step
-        - if:
-            condition:
-              lambda: 'return x == "comfort";'
-            then:
-              - number.set:
-                  id: brink_modbus_flow_step
-                  value: 1
-              - fan.turn_on:
-                  id: brink_ventilation_combined_fan
-                  speed: !lambda 'return (int) roundf((id(brink_flow_1).state / ${type_flow_max}) * 100.0f);'
-              - select.set:
-                  id: brink_modbus_control_mode
-                  option: Modbus Step
-        - if:
-            condition:
-              lambda: 'return x == "breeze";'
-            then:
-              - number.set:
-                  id: brink_modbus_flow_step
-                  value: 2
-              - fan.turn_on:
-                  id: brink_ventilation_combined_fan
-                  speed: !lambda 'return (int) roundf((id(brink_flow_2).state / ${type_flow_max}) * 100.0f);'
-              - select.set:
-                  id: brink_modbus_control_mode
-                  option: Modbus Step
-        - if:
-            condition:
-              lambda: 'return x == "boost";'
-            then:
-              - number.set:
-                  id: brink_modbus_flow_step
-                  value: 3
-              - fan.turn_on:
-                  id: brink_ventilation_combined_fan
-                  speed: !lambda 'return (int) roundf((id(brink_flow_3).state / ${type_flow_max}) * 100.0f);'
-              - select.set:
-                  id: brink_modbus_control_mode
-                  option: Modbus Step
 
 button:
 
