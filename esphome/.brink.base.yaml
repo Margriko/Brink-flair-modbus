@@ -215,6 +215,7 @@ sensor:
     modbus_controller_id: ${name}
     icon: mdi:fan
     address: 4031
+    device_class: volume_flow_rate
     unit_of_measurement: "m3/h"
     register_type: read
     value_type: U_WORD
@@ -229,6 +230,7 @@ sensor:
     modbus_controller_id: ${name}
     icon: mdi:fan
     address: 4032
+    device_class: volume_flow_rate
     unit_of_measurement: "m3/h"
     register_type: read
     value_type: U_WORD
@@ -263,6 +265,7 @@ sensor:
     modbus_controller_id: ${name}
     icon: mdi:fan
     address: 4041
+    device_class: volume_flow_rate
     unit_of_measurement: "m3/h"
     register_type: read
     value_type: U_WORD
@@ -277,6 +280,7 @@ sensor:
     modbus_controller_id: ${name}
     icon: mdi:fan
     address: 4042
+    device_class: volume_flow_rate
     unit_of_measurement: "m3/h"
     register_type: read
     value_type: U_WORD
@@ -355,6 +359,7 @@ sensor:
     modbus_controller_id: ${name}
     icon: mdi:clock-start
     address: 4116
+    device_class: volume_flow_rate
     unit_of_measurement: "m3/h"
     register_type: read
     value_type: U_DWORD
@@ -699,18 +704,6 @@ button:
 #            ESP_LOGI("ModbusLambda", "Brink Modbus Step set");
 
 number:
-  - id: brink_modbus_flow_step
-    name: ${brink_modbus_flow_step}
-    platform: modbus_controller
-    modbus_controller_id: ${name}
-    register_type: holding
-    address: 8001
-    value_type: S_WORD
-    min_value: 0
-    max_value: 3
-    mode: slider
-    icon: mdi:fan
-
   - id: brink_flow_0
     name: Flow 0
     platform: modbus_controller
@@ -718,6 +711,7 @@ number:
     register_type: holding
     address: 6000
     entity_category: config
+    device_class: volume_flow_rate
     unit_of_measurement: "m3/h"
     value_type: S_WORD
     min_value: 0
@@ -732,6 +726,7 @@ number:
     register_type: holding
     address: 6001
     entity_category: config
+    device_class: volume_flow_rate
     unit_of_measurement: "m3/h"
     value_type: S_WORD
     min_value: 50
@@ -746,6 +741,7 @@ number:
     register_type: holding
     address: 6002
     entity_category: config
+    device_class: volume_flow_rate
     unit_of_measurement: "m3/h"
     value_type: S_WORD
     min_value: 50
@@ -760,6 +756,7 @@ number:
     register_type: holding
     address: 6003
     entity_category: config
+    device_class: volume_flow_rate
     unit_of_measurement: "m3/h"
     value_type: S_WORD
     min_value: 50
