@@ -190,7 +190,7 @@
             name: Flow 2
           - entity: number.brink_flow_3
             name: Flow 3
-          - entity: number.brink_base_fallback_preset
+          - entity: select.brink_base_fallback_preset
             name: Base/fallback preset
           - entity: fan.brink_ventilatie_stand
             name: Ventilatie stand

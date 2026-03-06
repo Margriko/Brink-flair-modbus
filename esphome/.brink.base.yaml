@@ -556,6 +556,20 @@ select:
               delay(20) ;
               controller->queue_command(set_value_cmd); 
 
+  - id: brink_base_fallback_preset
+    name: Base/fallback preset
+    platform: modbus_controller
+    modbus_controller_id: ${name}
+    register_type: holding
+    address: 6031
+    entity_category: config
+    value_type: S_WORD
+    skip_updates: 20
+    icon: mdi:refresh-auto
+    optionsmap:
+      "Low": 0
+      "Normal": 1
+
 switch:
   - id: brink_bypass_boost
     name: Bypass Boost
@@ -763,20 +777,6 @@ number:
     max_value: ${type_flow_max}
     mode: slider
     icon: mdi:fan-speed-3
-
-  - id: brink_base_fallback_preset
-    name: Base/fallback preset
-    platform: modbus_controller
-    modbus_controller_id: ${name}
-    register_type: holding
-    address: 6031
-    entity_category: config
-    value_type: S_WORD
-    min_value: 0
-    max_value: 3
-    step: 1
-    mode: box
-    icon: mdi:refresh-auto
 
   # If the bypass boost function is activated, the bypass opens and the fan will run at this preset setting.
   - id: brink_bypass_boost_switch_position
