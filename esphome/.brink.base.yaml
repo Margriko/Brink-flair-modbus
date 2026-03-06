@@ -560,7 +560,6 @@ select:
     name: Base/fallback preset
     platform: modbus_controller
     modbus_controller_id: ${name}
-    register_type: holding
     address: 6031
     entity_category: config
     value_type: S_WORD
