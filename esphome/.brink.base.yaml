@@ -621,16 +621,8 @@ output:
     address: 8001
     value_type: S_WORD
     write_lambda: |-
-      // Brink register 8001 is a step selector only:
-      // 0..3 maps to fan steps 1..4 (off is controlled via standby register 8003).
-      auto step = static_cast<int>(roundf(x * 4.0f)) - 1;
-      if (step < 0) {
-        return 0;
-      }
-      if (step > 3) {
-        return 3;
-      }
-      return step;
+      auto step = static_cast<int>(roundf(x * 3.0f));
+      return step < 1 ? 1 : (step > 3 ? 3 : step);
 
   - id: brink_modbus_flow_rate_output
     platform: modbus_controller
@@ -647,7 +639,9 @@ fan:
     platform: speed
     output: brink_modbus_flow_step_output
     icon: mdi:fan
-    speed_count: 4
+    speed_count: 3
+    preset_modes:
+      - Holiday
     restore_mode: RESTORE_DEFAULT_ON
     on_turn_on:
       then:
@@ -660,6 +654,14 @@ fan:
         - select.set:
             id: brink_modbus_control_mode
             option: Modbus Step
+    on_preset_set:
+      then:
+        - lambda: |-
+            esphome::modbus_controller::ModbusController *controller = id(${name});
+            auto set_value_cmd = esphome::modbus_controller::ModbusCommandItem::create_write_single_command(
+              controller, 8001, 0);
+            delay(20) ;
+            controller->queue_command(set_value_cmd);
 
   - id: brink_ventilation_flow_fan
     name: ${brink_modbus_flow_rate}
