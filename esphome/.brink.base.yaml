@@ -642,6 +642,7 @@ fan:
     speed_count: 3
     preset_modes:
       - Holiday
+      - Party
     restore_mode: RESTORE_DEFAULT_ON
     on_turn_on:
       then:
@@ -662,9 +663,17 @@ fan:
     on_preset_set:
       then:
         - lambda: |-
+            int preset_value;
+            if (x == "Holiday") {
+              preset_value = 0;
+            } else if (x == "Party") {
+              preset_value = 3;
+            } else {
+              return;
+            }
             esphome::modbus_controller::ModbusController *controller = id(${name});
             auto set_value_cmd = esphome::modbus_controller::ModbusCommandItem::create_write_single_command(
-              controller, 8001, 0);
+              controller, 8001, preset_value);
             delay(20) ;
             controller->queue_command(set_value_cmd);
 
