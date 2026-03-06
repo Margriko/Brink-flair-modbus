@@ -563,6 +563,7 @@ select:
     address: 6031
     entity_category: config
     value_type: S_WORD
+    optimistic: true
     skip_updates: 20
     icon: mdi:refresh-auto
     optionsmap:
