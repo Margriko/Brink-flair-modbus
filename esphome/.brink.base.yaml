@@ -651,9 +651,14 @@ fan:
         - switch.turn_on: brink_standby_switch
     on_speed_set:
       then:
-        - select.set:
-            id: brink_modbus_control_mode
-            option: Modbus Step
+        - if:
+            condition:
+              lambda: |-
+                return id(brink_modbus_control_mode).state != "Modbus Step";
+            then:
+              - select.set:
+                  id: brink_modbus_control_mode
+                  option: Modbus Step
     on_preset_set:
       then:
         - lambda: |-
@@ -678,9 +683,14 @@ fan:
         - switch.turn_on: brink_standby_switch
     on_speed_set:
       then:
-        - select.set:
-            id: brink_modbus_control_mode
-            option: Modbus Flow
+        - if:
+            condition:
+              lambda: |-
+                return id(brink_modbus_control_mode).state != "Modbus Flow";
+            then:
+              - select.set:
+                  id: brink_modbus_control_mode
+                  option: Modbus Flow
 
 button:
 
