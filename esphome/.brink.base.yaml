@@ -776,7 +776,7 @@ number:
     max_value: 3
     step: 1
     mode: box
-    icon: mdi:home
+    icon: mdi:refresh-auto
 
   # If the bypass boost function is activated, the bypass opens and the fan will run at this preset setting.
   - id: brink_bypass_boost_switch_position
